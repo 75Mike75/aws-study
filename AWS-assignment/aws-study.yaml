@@ -9,7 +9,6 @@ Parameters:
 
   SSHAllowCidr:
     Type: String
-    Default: 60.130.193.56/32
     Description: My global IP address for SSH access
 
   KeyName:
