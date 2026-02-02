@@ -7,6 +7,11 @@ Parameters:
     Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
     Description: Latest Amazon Linux 2 AMI ID
 
+  SSHAllowCidr:
+    Type: String
+    Default: 60.130.193.56/32
+    Description: My global IP address for SSH access
+
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
     Description: Name of an existing EC2 KeyPair to enable SSH access
@@ -131,7 +136,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: 60.130.193.56/32
+          CidrIp: !Ref SSHAllowCidr
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
@@ -139,7 +144,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 8080
           ToPort: 8080
-          CidrIp: 0.0.0.0/0
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
@@ -201,7 +206,7 @@ Resources:
       Matcher:
         HttpCode: 200
       Name: aws-study-ALB-TG
-      Port: 80
+      Port: 8080
       Protocol: HTTP
       Targets:
         - Id: !Ref StudyEC2
